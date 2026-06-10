@@ -21,8 +21,8 @@
   /* header */
   .hd{margin-bottom:28px}
   .hd h1{font-size:32px;font-weight:800;color:#1a1d23;margin-bottom:4px;letter-spacing:-.04em;background:linear-gradient(135deg,#4361ee,#7209b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .hd p{font-size:12px;color:#9ca3af;line-height:1.5}
-  .hd p a{color:#4361ee;text-decoration:none}
+  .hd p{font-size:12px;color:#6b7280;line-height:1.5}
+  .hd p a{color:#4361ee;text-decoration:none;font-weight:500}
   .hd p a:hover{text-decoration:underline}
 
   /* toolbar */
@@ -182,7 +182,7 @@
 
 <div class="hd">
   <h1>好多DNS</h1>
-  <p>本地测速：替换 <code>custom_dns.json</code> 到 <code>%USERPROFILE%\AppData\Local\DNSSpeedTester\</code> 后运行 DnsSpeedTestApp &nbsp;·&nbsp; <a href="README.md">使用说明</a></p>
+  <p style="color:#6b7280">超全 DNS 集合，专供国内使用测试 &nbsp;·&nbsp; <a href="README.md">使用说明</a> &nbsp;·&nbsp; <a href="https://github.com/songshua295/haoduoDNS.git" target="_blank">GitHub</a></p>
 </div>
 
 <div class="bar">
@@ -242,7 +242,7 @@ function badges(d){
     if(d.SecondaryIPString) d.SecondaryIPString.split(' ').forEach(ip=>{if(ip) b.push({cls:v6?'ip6':'ip4',lab:lab,disp:ip,copy:ip})})
   }
   if(d.DohUrl) b.push({cls:'doh',lab:'DoH',disp:d.DohUrl,copy:d.DohUrl})
-  if(d.DotHost) b.push({cls:'dot',lab:'DoT',disp:d.DotHost+':'+(d.DotPort??853),copy:d.DotHost+':'+(d.DotPort??853)})
+  if(d.DotHost) b.push({cls:'dot',lab:'DoT',disp:d.DotHost,copy:d.DotHost})
   if(d.DoqHost) b.push({cls:'doq',lab:'DoQ',disp:d.DoqHost+':'+(d.DoqPort??853),copy:d.DoqHost+':'+(d.DoqPort??853)})
   if(d.IPv6String) d.IPv6String.split(' ').forEach(ip=>{if(ip) b.push({cls:'ip6',lab:'IPv6',disp:ip,copy:ip})})
   const KN=new Set(['Name','PrimaryIPString','SecondaryIPString','IsCustom','DohUrl','DotHost','DotPort','DoqHost','DoqPort','Score','Desc','IPv6String'])

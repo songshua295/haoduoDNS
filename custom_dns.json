@@ -10,7 +10,7 @@
     "DoqHost": "",
     "DoqPort": 853,
     "Score": null,
-    "Desc": ""
+    "Desc": "去广告"
   },
   {
     "Name": "114 DNS 家庭版",
@@ -23,7 +23,7 @@
     "DoqHost": "",
     "DoqPort": 853,
     "Score": null,
-    "Desc": ""
+    "Desc": "去广告"
   },
   {
     "Name": "114DNS",
@@ -62,7 +62,7 @@
     "DoqHost": "",
     "DoqPort": 853,
     "Score": null,
-    "Desc": ""
+    "Desc": "去广告"
   },
   {
     "Name": "CIRA Canadian Shield DNS",
@@ -103,7 +103,7 @@
     "DoqHost": "",
     "DoqPort": 853,
     "Score": null,
-    "Desc": ""
+    "Desc": "去广告"
   },
   {
     "Name": "Cloudflare DNS",
@@ -358,7 +358,7 @@
     "DoqHost": "",
     "DoqPort": 853,
     "Score": null,
-    "Desc": ""
+    "Desc": "去广告"
   },
   {
     "Name": "TWNIC Quad101 DNS",
