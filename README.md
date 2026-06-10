@@ -44,6 +44,15 @@ copy custom_dns.json "%USERPROFILE%\AppData\Local\DNSSpeedTester\custom_dns.json
 3. 运行 DnsSpeedTestApp，它会自动读取该 JSON 文件中的 DNS 服务器进行测速
 4. 根据测速结果，筛选出延迟最低的 DNS 配置到你的设备
 
+### 3. 客户端配置
+
+测出最快的 DNS 后，在客户端配置 DoH/DoT 使用：
+
+| 平台 | 推荐工具 | 说明 |
+|------|----------|------|
+| **Android** | [18bit DNS 客户端](https://down.18bit.cn/) | 支持 DoH，轻量易用 |
+| **Windows** | [YogaDNS](https://www.yoganetworks.com/yogadns/) | 支持 DoH/DoT，全局接管系统 DNS |
+
 > **提示：** 你可以编辑 `custom_dns.json` 中的 `Score` 字段（数字越大越推荐）和 `Desc` 字段（描述信息），修改后重新复制到测速工具目录即可生效。
 
 ## 文件结构
@@ -87,6 +96,11 @@ copy custom_dns.json "%USERPROFILE%\AppData\Local\DNSSpeedTester\custom_dns.json
 | null | 不评分 |
 
 页面会按 Score 降序排列，前三名显示金银铜牌 🥇🥈🥉。
+
+## 参考
+
+- DNS 数据来源：[ToolB 公共 DNS 大全](https://toolb.cn/publicdns)
+- 测速工具：[xihan123/DnsSpeedTestApp](https://github.com/xihan123/DnsSpeedTestApp)
 
 ## License
 

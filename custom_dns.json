@@ -1926,5 +1926,19 @@
     "Desc": "官网 dns.trli.club",
     "IPv6String": "",
     "Name": "冷莫trli"
+  },
+  {
+    "PrimaryIPString": "",
+    "SecondaryIPString": "",
+    "IsCustom": true,
+    "DohUrl": "https://doh.18bit.cn/dns-query",
+    "DotHost": "dns.18bit.cn",
+    "DotPort": 853,
+    "DoqHost": "",
+    "DoqPort": 853,
+    "Score": 8,
+    "Desc": "去广告",
+    "IPv6String": "",
+    "Name": "18bit DNS"
   }
 ]
