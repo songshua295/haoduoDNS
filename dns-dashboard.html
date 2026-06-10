@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%234361ee'/><text x='16' y='21' font-size='15' text-anchor='middle' fill='white' font-family='Arial,sans-serif' font-weight='bold'>DNS</text></svg>">
+<title>好多DNS</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#fff;
+    color:#1a1d23;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    padding:40px 24px;
+    min-height:100vh;
+  }
+  .w{max-width:1200px;margin:0 auto}
+
+  /* header */
+  .hd{margin-bottom:28px}
+  .hd h1{font-size:32px;font-weight:800;color:#1a1d23;margin-bottom:4px;letter-spacing:-.04em;background:linear-gradient(135deg,#4361ee,#7209b7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hd p{font-size:12px;color:#9ca3af;line-height:1.5}
+  .hd p a{color:#4361ee;text-decoration:none}
+  .hd p a:hover{text-decoration:underline}
+
+  /* toolbar */
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;align-items:center}
+  .bar button{
+    padding:5px 14px;border-radius:14px;
+    border:1px solid #e4e7ec;
+    background:#fff;color:#6b7280;
+    font-size:14px;cursor:pointer;
+    transition:all .1s;
+  }
+  .bar button:hover{border-color:#4361ee;color:#4361ee}
+  .bar button.on{background:#4361ee;color:#fff;border-color:#4361ee}
+  .bar input{
+    padding:6px 12px;border-radius:8px;
+    border:1px solid #e4e7ec;
+    background:#fff;font-size:14px;outline:none;
+    width:180px;transition:border .15s;
+  }
+  .bar input:focus{border-color:#4361ee}
+  .bar .cnt{color:#6b7280;font-size:14px;margin-left:auto}
+
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+  .tbl th{
+    text-align:left;font-size:13px;font-weight:600;color:#9ca3af;
+    text-transform:uppercase;letter-spacing:.05em;
+    padding:8px 12px 8px 0;border-bottom:1px solid #e4e7ec;
+    white-space:nowrap;
+  }
+  .tbl th:last-child{padding-right:0}
+  .tbl td{padding:10px 12px 10px 0;border-bottom:1px solid #f0f1f3;vertical-align:middle}
+  .tbl td:last-child{padding-right:0}
+  .tbl tr:hover td{background:#fafbfc}
+  /* no vertical borders */
+  .tbl th,.tbl td{border-left:none;border-right:none}
+
+  /* name column */
+  .col-name{font-weight:600;font-size:15px;min-width:100px;padding-right:16px!important}
+  .col-desc{
+    font-size:11px;color:#9ca3af;margin-top:1px;line-height:1.3;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;
+  }
+  .col-idx{
+    width:32px;text-align:center;font-size:12px;color:#9ca3af;
+    font-weight:500;padding-right:4px!important;flex-shrink:0;
+  }
+  .score-tag{
+    display:inline-block;font-size:12px;font-weight:700;
+    padding:1px 6px;border-radius:4px;
+    margin-left:4px;vertical-align:middle;
+    background:#fef3c7;color:#d97706;
+  }
+
+  /* badges row */
+  .badges{display:flex;flex-direction:column;gap:4px}
+  .badge{
+    display:flex;align-items:center;gap:4px;
+    padding:2px 0;
+    font-family:"SF Mono","Fira Code",Consolas,monospace;
+    font-size:15px;
+    line-height:1.5;
+  }
+  .badge .bv{
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;
+  }
+  .badge .bl{
+    font-weight:700;font-size:12px;text-transform:uppercase;
+    letter-spacing:.02em;flex-shrink:0;
+    padding:1px 8px;border-radius:5px;line-height:1.6;
+  }
+  .badge .bcp{
+    flex-shrink:0;
+    width:20px;height:20px;
+    border:none;border-radius:50%;
+    background:transparent;
+    cursor:pointer;
+    font-size:11px;
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:0;margin:0;line-height:1;
+    opacity:.6;transition:opacity .1s;
+  }
+  .badge .bv{color:#1a1d23}
+  .badge .bcp:hover{opacity:1}
+  .badge .bcp.done{opacity:1}
+
+  /* badge colors — only the label pill gets colored bg; value & copy button are plain */
+  .badge-ip4 .bl  {background:#e8f5e9;color:#2e7d32}
+  .badge-ip4 .bcp{color:#2e7d32}
+  .badge-ip6 .bl  {background:#fef3c7;color:#d97706}
+  .badge-ip6 .bcp{color:#d97706}
+  .badge-doh .bl  {background:#e0f7fa;color:#00838f}
+  .badge-doh .bcp{color:#00838f}
+  .badge-dot .bl  {background:#ffebee;color:#c62828}
+  .badge-dot .bcp{color:#c62828}
+  .badge-doq .bl  {background:#f3e5f5;color:#7b1fa2}
+  .badge-doq .bcp{color:#7b1fa2}
+  .badge-etc .bl  {background:#f3f4f6;color:#6b7280}
+  .badge-etc .bcp{color:#6b7280}
+
+  /* copy-all column */
+  .col-all{text-align:right;white-space:nowrap;padding-left:12px!important}
+  .col-all button{
+    padding:4px 12px;border-radius:6px;
+    border:1px solid #e4e7ec;
+    background:#fff;color:#6b7280;
+    font-size:14px;font-weight:500;
+    cursor:pointer;transition:all .1s;
+  }
+  .col-all button:hover{background:#4361ee;border-color:#4361ee;color:#fff}
+  .col-all button.done{background:#10b981;border-color:#10b981;color:#fff}
+
+  /* toast */
+  .toasts{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:4px}
+  .toast{
+    padding:8px 16px;border-radius:8px;
+    background:#1a1d23;color:#fff;
+    font-size:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);
+    animation:pop .12s ease-out;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+  .empty,.loading{text-align:center;padding:60px 20px;color:#6b7280;font-size:14px}
+  .empty span,.loading span{font-size:28px;display:block;margin-bottom:8px}
+
+  @media(max-width:768px){
+    body{padding:16px 10px}
+    .hd h1{font-size:26px}
+    .bar input{width:100%;margin-top:4px}
+    .bar .cnt{margin-left:0;width:100%;text-align:right}
+    .tbl,.tbl thead,.tbl tbody,.tbl tr,.tbl th,.tbl td{display:block}
+    .tbl thead{display:none}
+    .tbl tr{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:12px;margin-bottom:8px}
+    .tbl td{padding:2px 0;border-bottom:none}
+    .col-idx{width:auto!important;font-size:12px;padding:0 4px 0 0!important;display:inline;color:#9ca3af;font-weight:500}
+    .col-name{min-width:0;padding-right:0!important;margin-bottom:0;font-size:14px;display:inline}
+    .tbl td:nth-child(3){display:block;padding-top:4px}
+    .col-all{display:block!important;padding-top:4px;width:100%}
+    .col-desc{max-width:none;font-size:11px}
+    .col-all{padding-left:0!important;text-align:left;padding-top:4px;width:100%}
+    .col-all button{width:100%}
+    .badges{gap:3px}
+    .badge{font-size:13px}
+    .badge .bl{font-size:11px}
+    .badge .bcp{width:18px;height:18px;font-size:10px}
+    .score-tag{font-size:11px}
+  }
+  @media(max-width:480px){
+    .badge{font-size:12px;padding:2px 6px}
+    .badge .bl{font-size:10px}
+    .tbl tr{padding:10px}
+  }
+</style>
+</head>
+<body>
+<div class="w">
+
+<div class="hd">
+  <h1>好多DNS</h1>
+  <p>本地测速：替换 <code>custom_dns.json</code> 到 <code>%USERPROFILE%\AppData\Local\DNSSpeedTester\</code> 后运行 DnsSpeedTestApp &nbsp;·&nbsp; <a href="README.md">使用说明</a></p>
+</div>
+
+<div class="bar">
+  <div id="filters">
+    <button class="on" data-f="all">全部</button>
+    <button data-f="doh">DoH</button>
+    <button data-f="dot">DoT</button>
+    <button data-f="doq">DoQ</button>
+    <button data-f="custom">自定义</button>
+    <button data-f="builtin">内置</button>
+  </div>
+  <input id="search" placeholder="搜索名称…" autocomplete="off">
+  <span class="cnt" id="cnt"></span>
+</div>
+
+<table class="tbl" id="tbl">
+  <thead>
+    <tr>
+      <th style="width:36px;text-align:center">#</th>
+      <th>名称</th>
+      <th>参数</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    <tr><td colspan="4"><div class="loading"><span>⏳</span>加载中…</div></td></tr>
+  </tbody>
+</table>
+
+</div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function toast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .2s';setTimeout(()=>el.remove(),200)},1400)
+}
+
+async function cp(text,btn){
+  try{await navigator.clipboard.writeText(text)}
+  catch{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)}
+  btn.classList.add('done');btn.textContent='✓';toast('已复制')
+  setTimeout(()=>{btn.classList.remove('done');btn.textContent='📋'},900)
+}
+
+function isIPv6(s){return typeof s==='string'&&s.includes(':')}
+
+function badges(d){
+  const b=[]
+  if(d.PrimaryIPString){
+    const v6=isIPv6(d.PrimaryIPString)
+    const lab=v6?'IPv6':'IPv4'
+    b.push({cls:v6?'ip6':'ip4',lab:lab,disp:d.PrimaryIPString,copy:d.PrimaryIPString})
+    if(d.SecondaryIPString) d.SecondaryIPString.split(' ').forEach(ip=>{if(ip) b.push({cls:v6?'ip6':'ip4',lab:lab,disp:ip,copy:ip})})
+  }
+  if(d.DohUrl) b.push({cls:'doh',lab:'DoH',disp:d.DohUrl,copy:d.DohUrl})
+  if(d.DotHost) b.push({cls:'dot',lab:'DoT',disp:d.DotHost+':'+(d.DotPort??853),copy:d.DotHost+':'+(d.DotPort??853)})
+  if(d.DoqHost) b.push({cls:'doq',lab:'DoQ',disp:d.DoqHost+':'+(d.DoqPort??853),copy:d.DoqHost+':'+(d.DoqPort??853)})
+  if(d.IPv6String) d.IPv6String.split(' ').forEach(ip=>{if(ip) b.push({cls:'ip6',lab:'IPv6',disp:ip,copy:ip})})
+  const KN=new Set(['Name','PrimaryIPString','SecondaryIPString','IsCustom','DohUrl','DotHost','DotPort','DoqHost','DoqPort','Score','Desc','IPv6String'])
+  for(const[k,v]of Object.entries(d)){if(k==='Name'||KN.has(k))continue;b.push({cls:'etc',lab:k,disp:String(v),copy:String(v)})}
+  return b
+}
+
+function allLine(d){
+  const p=[d.Name]
+  if(d.Desc) p.push('Desc: '+d.Desc)
+  if(d.PrimaryIPString) p.push((isIPv6(d.PrimaryIPString)?'IPv6':'IPv4')+' '+d.PrimaryIPString+(d.SecondaryIPString?' / '+d.SecondaryIPString:''))
+  if(d.IPv6String) p.push('IPv6 '+d.IPv6String)
+  if(d.DohUrl) p.push('DoH '+d.DohUrl)
+  if(d.DotHost) p.push('DoT '+d.DotHost+':'+(d.DotPort??853))
+  if(d.DoqHost) p.push('DoQ '+d.DoqHost+':'+(d.DoqPort??853))
+  return p.join(' | ')
+}
+
+let curFilter='all',curSearch='',DATA=[]
+
+function match(d){
+  if(curSearch&&!d.Name.toLowerCase().includes(curSearch)) return false
+  if(curFilter==='all') return true
+  if(curFilter==='doh') return !!d.DohUrl
+  if(curFilter==='dot') return !!d.DotHost
+  if(curFilter==='doq') return !!d.DoqHost
+  if(curFilter==='custom') return d.IsCustom===true
+  if(curFilter==='builtin') return d.IsCustom!==true
+  return true
+}
+
+function render(){
+  const tbody=document.getElementById('tbody')
+  const items=DATA.filter(match)
+  document.getElementById('cnt').textContent=items.length+' / '+DATA.length
+
+  if(!items.length){
+    tbody.innerHTML='<tr><td colspan="4"><div class="empty"><span>🔍</span>没有匹配的 DNS 服务器</div></td></tr>'
+    return
+  }
+
+  // medal rank
+  const scoreRanks = {}
+  const scored = items.filter(d=>d.Score!=null).map(d=>d.Score)
+  const uniq = [...new Set(scored)].sort((a,b)=>b-a)
+  uniq.forEach((s,i)=>{ if(i<3) scoreRanks[s]=['🥇','🥈','🥉'][i] })
+
+  tbody.innerHTML=items.map((d,idx)=>{
+    const bs=badges(d)
+    const all=allLine(d)
+    const medal = d.Score!=null && scoreRanks[d.Score] ? scoreRanks[d.Score] : ''
+    return `
+<tr>
+  <td class="col-idx">${idx+1}</td>
+  <td class="col-name">
+    <div>${esc(d.Name)}
+    ${medal}
+    ${d.Score!=null?`<span class="score-tag">★ ${d.Score}</span>`:''}</div>
+    ${d.Desc?`<div class="col-desc">${esc(d.Desc)}</div>`:''}
+  </td>
+  <td>
+    <div class="badges">
+      ${bs.map(b=>`
+      <span class="badge badge-${b.cls}">
+        <span class="bl">${b.lab}</span>
+        <span class="bv">${esc(b.disp)}</span>
+        <button class="bcp" onclick="cp('${esc(b.copy)}',this)" title="复制">📋</button>
+      </span>`).join('')}
+    </div>
+  </td>
+  <td class="col-all">
+    <button onclick="cp('${esc(all)}',this)">复制全部</button>
+  </td>
+</tr>`
+  }).join('')
+}
+
+document.getElementById('filters').addEventListener('click',e=>{
+  const btn=e.target.closest('button');if(!btn)return
+  document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('on'))
+  btn.classList.add('on');curFilter=btn.dataset.f;render()
+})
+
+document.getElementById('search').addEventListener('input',e=>{
+  curSearch=e.target.value.trim().toLowerCase();render()
+})
+
+async function init(){
+  try{const r=await fetch('custom_dns.json');if(!r.ok)throw Error();DATA=await r.json()}
+  catch{
+    DATA=[
+      {"Name":"Cloudflare","PrimaryIPString":"1.1.1.1","SecondaryIPString":"1.0.0.1","IsCustom":false,"DohUrl":"https://cloudflare-dns.com/dns-query","DotHost":"cloudflare-dns.com","DotPort":853,"DoqHost":"cloudflare-dns.com","DoqPort":853},
+      {"Name":"Google DNS","PrimaryIPString":"8.8.8.8","SecondaryIPString":"8.8.4.4","IsCustom":false,"DohUrl":"https://dns.google/dns-query","DotHost":"dns.google","DotPort":853,"DoqHost":"dns.google","DoqPort":853}
+    ]
+  }
+  // sort by Score descending (nulls last)
+  DATA.sort((a,b)=>{
+    const sa=a.Score==null?-Infinity:a.Score
+    const sb=b.Score==null?-Infinity:b.Score
+    return sb-sa
+  })
+  render()
+}
+init()
+</script>
+</body>
+</html>
